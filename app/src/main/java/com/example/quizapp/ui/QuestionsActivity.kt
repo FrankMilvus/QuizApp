@@ -30,9 +30,9 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var textViewOption4: TextView
     private lateinit var buttonCheck: Button
 
-    private val currentPosition = 1
+    private var currentPosition = 1
     private lateinit var questionsList: MutableList<Question>
-    private lateinit var selectedOptionPosition = 0
+    private var selectedOptionPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,26 +53,32 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         textViewOption3 = findViewById(R.id.text_view_option_three)
         textViewOption4 = findViewById(R.id.text_view_option_four)
 
-        buttonCheck= findViewById(R.id.button_check)
+        buttonCheck = findViewById(R.id.button_check)
+
+        textViewOption1.setOnClickListener (this)
+        textViewOption2.setOnClickListener (this)
+        textViewOption3.setOnClickListener (this)
+        textViewOption4.setOnClickListener (this)
+        buttonCheck.setOnClickListener(this)
 
         questionsList = Constants.getQuestions()
         Log.d("QuestionSize", "${questionsList.size}")
         setQuestion()
     }
 
-    private fun setQuestion (){
-        val question = questionsList[currentPosition-1]
+    private fun setQuestion() {
+        val question = questionsList[currentPosition - 1]
         flagImage.setImageResource(question.image)
-        progressBar.progress=currentPosition
-        textViewProgress.text ="$currentPosition/${progressBar.max}"
+        progressBar.progress = currentPosition
+        textViewProgress.text = "$currentPosition/${progressBar.max}"
         textViewQuestion.text = question.question
-        textViewOption1.text=question.optionOne
-        textViewOption2.text=question.optionTwo
-        textViewOption3.text=question.optionThree
-        textViewOption4.text=question.optionFour
+        textViewOption1.text = question.optionOne
+        textViewOption2.text = question.optionTwo
+        textViewOption3.text = question.optionThree
+        textViewOption4.text = question.optionFour
 
-        if (currentPosition == questionsList.size){
-            buttonCheck.text= getString(R.string.buttomn_check_finish)
+        if (currentPosition == questionsList.size) {
+            buttonCheck.text = getString(R.string.buttomn_check_finish)
         } else {
             buttonCheck.text = getString(R.string.button_check_check)
         }
@@ -86,19 +92,51 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         options.add(textViewOption3)
         options.add(textViewOption4)
 
-        for (option in options){
-            option.setTextColor((Color.parseColor("#7A8089")))
-            option.typeface= Typeface.DEFAULT
-            option.background= ContextCompat.getDrawable(
-                this, R.drawable.default_option_border_bg
+
+        for (option in options) {
+            option.setTextColor(Color.parseColor("#7A8089"))
+            option.typeface = Typeface.DEFAULT
+            option.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.default_option_border_bg
             )
         }
     }
 
+    private fun selectedOption(
+        textView: TextView,
+        selectOptionNumber: Int
+    ) {
+        resetOptions()
+        selectedOptionPosition = selectOptionNumber
+        textView.setTextColor(Color.parseColor("#363A43"))
+        textView.setTypeface(textView.typeface, Typeface.BOLD)
+        textView.background = ContextCompat.getDrawable(
+            this,
+            R.drawable.selected_option_border_bg
+        )
+    }
 
     override fun onClick(view: View?) {
-        when(view.id){
+        when (view?.id) {
+            R.id.text_view_option_one -> {
+                selectedOption(textViewOption1, 1)
+            }
 
+            R.id.text_view_option_two -> {
+                selectedOption(textViewOption2, 2)
+            }
+
+            R.id.text_view_option_three -> {
+                selectedOption(textViewOption3, 3)
+            }
+
+            R.id.text_view_option_four -> {
+                selectedOption(textViewOption4, 4)
+            }
+            R.id.button_check->{
+
+            }
         }
     }
 }
