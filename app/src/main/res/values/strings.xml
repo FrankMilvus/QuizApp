@@ -11,4 +11,9 @@
     <string name="buttomn_check_finish">finish</string>
     <string name="button_check_check">check</string>
     <string name="button_next">Next</string>
+    <string name="hey_congrats">Hey, Congrats!</string>
+    <string name="text_view_result">Result</string>
+    <string name="user_name">User name</string>
+    <string name="score_9_out_of_10">Score 9 out of 10</string>
+    <string name="button_finish">Finish!</string>
 </resources>

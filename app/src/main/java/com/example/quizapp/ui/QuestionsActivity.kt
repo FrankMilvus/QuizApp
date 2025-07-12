@@ -169,39 +169,7 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun checkAnswer() {
         if (selectedAnswer == currentQuestion.correctAnswer) {
-            when (selectedAnswer) {
-                1 -> {
-                    textViewOption1.background =
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.correct_option_border_bg
-                        )
-                }
-
-                2 -> {
-                    textViewOption2.background =
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.correct_option_border_bg
-                        )
-                }
-
-                3 -> {
-                    textViewOption3.background =
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.correct_option_border_bg
-                        )
-                }
-
-                4 -> {
-                    textViewOption4.background =
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.correct_option_border_bg
-                        )
-                }
-            }
+            highLightAnswer(selectedAnswer)
             answered = true
         } else {
             when (selectedAnswer) {
@@ -245,7 +213,12 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun showSolution() {
         selectedAnswer = currentQuestion.correctAnswer
-        when (selectedAnswer) {
+        highLightAnswer(selectedAnswer)
+
+    }
+
+    private fun highLightAnswer (answer: Int){
+        when (answer) {
             1 -> {
                 textViewOption1.background =
                     ContextCompat.getDrawable(
