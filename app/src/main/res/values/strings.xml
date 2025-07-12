@@ -6,4 +6,5 @@
     <string name="name">Name</string>
     <string name="start">start</string>
     <string name="image_flag">Image Flag</string>
+    <string name="current_progress">0/10</string>
 </resources>
