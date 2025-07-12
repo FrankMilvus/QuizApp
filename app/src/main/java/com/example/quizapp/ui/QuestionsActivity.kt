@@ -1,6 +1,5 @@
 package com.example.quizapp.ui
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -30,9 +29,14 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var textViewOption4: TextView
     private lateinit var buttonCheck: Button
 
-    private var currentPosition = 1
+    //    private var currentPosition = 1
+    private var questionCounter = 1
     private lateinit var questionsList: MutableList<Question>
-    private var selectedOptionPosition = 0
+
+    //    private var selectedOptionPosition = 0
+    private var selectedAnswer = 0
+    private lateinit var currentQuestion: Question
+    private var answered = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,34 +59,37 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
         buttonCheck = findViewById(R.id.button_check)
 
-        textViewOption1.setOnClickListener (this)
-        textViewOption2.setOnClickListener (this)
-        textViewOption3.setOnClickListener (this)
-        textViewOption4.setOnClickListener (this)
+        textViewOption1.setOnClickListener(this)
+        textViewOption2.setOnClickListener(this)
+        textViewOption3.setOnClickListener(this)
+        textViewOption4.setOnClickListener(this)
         buttonCheck.setOnClickListener(this)
 
         questionsList = Constants.getQuestions()
         Log.d("QuestionSize", "${questionsList.size}")
-        setQuestion()
+        showNextQuestion()
     }
 
-    private fun setQuestion() {
-        val question = questionsList[currentPosition - 1]
+    private fun showNextQuestion() {
+        val question = questionsList[questionCounter - 1]
         flagImage.setImageResource(question.image)
-        progressBar.progress = currentPosition
-        textViewProgress.text = "$currentPosition/${progressBar.max}"
+        progressBar.progress = questionCounter
+        textViewProgress.text = "$questionCounter/${progressBar.max}"
         textViewQuestion.text = question.question
         textViewOption1.text = question.optionOne
         textViewOption2.text = question.optionTwo
         textViewOption3.text = question.optionThree
         textViewOption4.text = question.optionFour
 
-        if (currentPosition == questionsList.size) {
+        if (questionCounter == questionsList.size) {
             buttonCheck.text = getString(R.string.buttomn_check_finish)
+            currentQuestion = questionsList[questionCounter]
         } else {
             buttonCheck.text = getString(R.string.button_check_check)
         }
 
+        questionCounter++
+        answered = false
     }
 
     private fun resetOptions() {
@@ -108,7 +115,7 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         selectOptionNumber: Int
     ) {
         resetOptions()
-        selectedOptionPosition = selectOptionNumber
+        selectedAnswer = selectOptionNumber
         textView.setTextColor(Color.parseColor("#363A43"))
         textView.setTypeface(textView.typeface, Typeface.BOLD)
         textView.background = ContextCompat.getDrawable(
@@ -134,10 +141,83 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
             R.id.text_view_option_four -> {
                 selectedOption(textViewOption4, 4)
             }
-            R.id.button_check->{
 
+            R.id.button_check -> {
+                if (!answered) {
+                    checkAnswer()
+
+                } else {
+                    showNextQuestion()
+                }
             }
         }
+    }
+
+    private fun checkAnswer() {
+        if(selectedAnswer==currentQuestion.correctAnswer){
+            when(selectedAnswer){
+                1->{
+                    textViewOption1.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.correct_option_border_bg
+                        )
+                }
+                2->{
+                    textViewOption2.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.correct_option_border_bg
+                        )
+                }
+                3->{
+                    textViewOption3.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.correct_option_border_bg
+                        )
+                }
+                4->{
+                    textViewOption4.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.correct_option_border_bg
+                        )
+                }
+            }
+        } else {
+            when(selectedAnswer){
+                1->{
+                    textViewOption1.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.wrong_option_border_bg
+                        )
+                }
+                2->{
+                    textViewOption2.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.wrong_option_border_bg
+                        )
+                }
+                3->{
+                    textViewOption3.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.wrong_option_border_bg
+                        )
+                }
+                4->{
+                    textViewOption4.background =
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.wrong_option_border_bg
+                        )
+                }
+            }
+        }
+        buttonCheck.text= getString(R.string.button_next)
     }
 }
 
