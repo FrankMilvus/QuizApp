@@ -71,25 +71,37 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showNextQuestion() {
+        //gpt help:
+        if (questionCounter > questionsList.size) {
+            //quiz is over
+            //go to finish activity or results
+            finish()
+            return
+        }
+
+
         val question = questionsList[questionCounter - 1]
-        flagImage.setImageResource(question.image)
+        currentQuestion = question //added string
+        flagImage.setImageResource(currentQuestion.image)//(question.image)
         progressBar.progress = questionCounter
-        textViewProgress.text = "$questionCounter/${progressBar.max}"
+        textViewProgress.text = "${questionCounter}/${progressBar.max}" //+1
+
         textViewQuestion.text = question.question
         textViewOption1.text = question.optionOne
         textViewOption2.text = question.optionTwo
         textViewOption3.text = question.optionThree
         textViewOption4.text = question.optionFour
 
-        if (questionCounter == questionsList.size) {
+        if (questionCounter == questionsList.size - 1) {
             buttonCheck.text = getString(R.string.buttomn_check_finish)
-            currentQuestion = questionsList[questionCounter]
+            //currentQuestion = questionsList[questionCounter]
         } else {
             buttonCheck.text = getString(R.string.button_check_check)
         }
 
-        questionCounter++
+
         answered = false
+        questionCounter++
     }
 
     private fun resetOptions() {
@@ -148,36 +160,41 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
                 } else {
                     showNextQuestion()
+                    resetOptions()
                 }
+                selectedAnswer = 0
             }
         }
     }
 
     private fun checkAnswer() {
-        if(selectedAnswer==currentQuestion.correctAnswer){
-            when(selectedAnswer){
-                1->{
+        if (selectedAnswer == currentQuestion.correctAnswer) {
+            when (selectedAnswer) {
+                1 -> {
                     textViewOption1.background =
                         ContextCompat.getDrawable(
                             this,
                             R.drawable.correct_option_border_bg
                         )
                 }
-                2->{
+
+                2 -> {
                     textViewOption2.background =
                         ContextCompat.getDrawable(
                             this,
                             R.drawable.correct_option_border_bg
                         )
                 }
-                3->{
+
+                3 -> {
                     textViewOption3.background =
                         ContextCompat.getDrawable(
                             this,
                             R.drawable.correct_option_border_bg
                         )
                 }
-                4->{
+
+                4 -> {
                     textViewOption4.background =
                         ContextCompat.getDrawable(
                             this,
@@ -185,30 +202,34 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
                         )
                 }
             }
+            answered = true
         } else {
-            when(selectedAnswer){
-                1->{
+            when (selectedAnswer) {
+                1 -> {
                     textViewOption1.background =
                         ContextCompat.getDrawable(
                             this,
                             R.drawable.wrong_option_border_bg
                         )
                 }
-                2->{
+
+                2 -> {
                     textViewOption2.background =
                         ContextCompat.getDrawable(
                             this,
                             R.drawable.wrong_option_border_bg
                         )
                 }
-                3->{
+
+                3 -> {
                     textViewOption3.background =
                         ContextCompat.getDrawable(
                             this,
                             R.drawable.wrong_option_border_bg
                         )
                 }
-                4->{
+
+                4 -> {
                     textViewOption4.background =
                         ContextCompat.getDrawable(
                             this,
@@ -217,7 +238,46 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
-        buttonCheck.text= getString(R.string.button_next)
+        buttonCheck.text = getString(R.string.button_next)
+        showSolution()
+
+    }
+
+    private fun showSolution() {
+        selectedAnswer = currentQuestion.correctAnswer
+        when (selectedAnswer) {
+            1 -> {
+                textViewOption1.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.correct_option_border_bg
+                    )
+            }
+
+            2 -> {
+                textViewOption2.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.correct_option_border_bg
+                    )
+            }
+
+            3 -> {
+                textViewOption3.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.correct_option_border_bg
+                    )
+            }
+
+            4 -> {
+                textViewOption4.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.correct_option_border_bg
+                    )
+            }
+        }
     }
 }
 
