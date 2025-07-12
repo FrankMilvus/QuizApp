@@ -1,10 +1,15 @@
 package com.example.quizapp.utils
+
 import com.example.quizapp.R
 import com.example.quizapp.model.Question
 
 object Constants {
 
-    fun getQuestions(): MutableList<Question>{
+    const val USER_NAME = "user_name"
+    const val TOTAL_QUESTIONS = "total_questions"
+    const val SCORE = "correct_answers"
+
+    fun getQuestions(): MutableList<Question> {
         val questions = mutableListOf<Question>()
 
         val quest1 = Question(

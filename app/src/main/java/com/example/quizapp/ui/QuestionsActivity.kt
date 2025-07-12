@@ -1,14 +1,17 @@
 package com.example.quizapp.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.quizapp.R
 import com.example.quizapp.model.Question
 import com.example.quizapp.utils.Constants
+
 
 class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var progressBar: ProgressBar
@@ -29,14 +33,18 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var textViewOption4: TextView
     private lateinit var buttonCheck: Button
 
+
     //    private var currentPosition = 1
-    private var questionCounter = 1
+    private var questionCounter = 0
     private lateinit var questionsList: MutableList<Question>
 
     //    private var selectedOptionPosition = 0
     private var selectedAnswer = 0
     private lateinit var currentQuestion: Question
     private var answered = false
+
+    private lateinit var name: String
+    private var score: Int =0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +65,8 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         textViewOption3 = findViewById(R.id.text_view_option_three)
         textViewOption4 = findViewById(R.id.text_view_option_four)
 
+
+
         buttonCheck = findViewById(R.id.button_check)
 
         textViewOption1.setOnClickListener(this)
@@ -68,35 +78,38 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         questionsList = Constants.getQuestions()
         Log.d("QuestionSize", "${questionsList.size}")
         showNextQuestion()
+
+        if(intent.hasExtra(Constants.USER_NAME)){
+            name = intent.getStringExtra(Constants.USER_NAME)!!
+        }
     }
 
     private fun showNextQuestion() {
-        //gpt help:
-        if (questionCounter > questionsList.size) {
-            //quiz is over
-            //go to finish activity or results
-            finish()
-            return
-        }
 
+        if (questionCounter < questionsList.size) {
+            buttonCheck.text = getString(R.string.button_check_check)
 
-        val question = questionsList[questionCounter - 1]
-        currentQuestion = question //added string
-        flagImage.setImageResource(currentQuestion.image)//(question.image)
-        progressBar.progress = questionCounter
-        textViewProgress.text = "${questionCounter}/${progressBar.max}" //+1
+            val question = questionsList[questionCounter]
+            currentQuestion = question //added string
+            flagImage.setImageResource(currentQuestion.image)//(question.image)
+            progressBar.progress = questionCounter
+            textViewProgress.text = "${questionCounter + 1}/${progressBar.max}" //+1
 
-        textViewQuestion.text = question.question
-        textViewOption1.text = question.optionOne
-        textViewOption2.text = question.optionTwo
-        textViewOption3.text = question.optionThree
-        textViewOption4.text = question.optionFour
-
-        if (questionCounter == questionsList.size - 1) {
-            buttonCheck.text = getString(R.string.buttomn_check_finish)
-            //currentQuestion = questionsList[questionCounter]
+            textViewQuestion.text = question.question
+            textViewOption1.text = question.optionOne
+            textViewOption2.text = question.optionTwo
+            textViewOption3.text = question.optionThree
+            textViewOption4.text = question.optionFour
         } else {
             buttonCheck.text = getString(R.string.button_check_check)
+            startActivity(Intent(this, ResultActivity::class.java).also {
+                it.putExtra(Constants.USER_NAME, name)
+                it.putExtra(Constants.SCORE, score)
+                it.putExtra(Constants.TOTAL_QUESTIONS, questionsList.size)
+            })
+
+
+            Toast.makeText(this@QuestionsActivity, "Quiz is over!", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -168,10 +181,13 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun checkAnswer() {
+
         if (selectedAnswer == currentQuestion.correctAnswer) {
             highLightAnswer(selectedAnswer)
             answered = true
+            score++
         } else {
+            score--
             when (selectedAnswer) {
                 1 -> {
                     textViewOption1.background =
@@ -217,7 +233,7 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    private fun highLightAnswer (answer: Int){
+    private fun highLightAnswer(answer: Int) {
         when (answer) {
             1 -> {
                 textViewOption1.background =
