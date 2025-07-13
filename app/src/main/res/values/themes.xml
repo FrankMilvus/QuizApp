@@ -10,7 +10,9 @@
     <style name="Theme.QuizApp.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowSoftInputMode">adjustPan</item>
 
     </style>
+
 </resources>

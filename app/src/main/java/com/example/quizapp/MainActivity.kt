@@ -2,6 +2,7 @@ package com.example.quizapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -34,6 +35,15 @@ class MainActivity : AppCompatActivity() {
                 }
             } else{
                 Toast.makeText(this@MainActivity,"Please enter ur name.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        editTextName.setOnEditorActionListener { _,actionId,_ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                startButton.performClick()
+                true
+            } else {
+                false
             }
         }
     }
