@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity,"Please enter ur name.", Toast.LENGTH_SHORT).show()
             }
         }
-
+//action to make comfortable default click
         editTextName.setOnEditorActionListener { _,actionId,_ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 startButton.performClick()
